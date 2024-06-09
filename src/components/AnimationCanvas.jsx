@@ -19,16 +19,29 @@ const AnimationCanvas = ({ animationType, color }) => {
 
     camera.position.z = 5;
 
+    const mouse = new THREE.Vector2();
+    const onMouseMove = (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+
     const animate = function () {
       requestAnimationFrame(animate);
       points.rotation.x += 0.01;
       points.rotation.y += 0.01;
+
+      points.position.x = mouse.x * 5;
+      points.position.y = mouse.y * 5;
+
       renderer.render(scene, camera);
     };
 
     animate();
 
     return () => {
+      window.removeEventListener("mousemove", onMouseMove);
       mount.removeChild(renderer.domElement);
     };
   }, [animationType, color]);
