@@ -26,7 +26,7 @@ const AnimationCanvas = ({ animationType, color }) => {
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
-    const onClick = (event) => {
+    const onDblClick = (event) => {
       setFixedMouse({
         x: (event.clientX / window.innerWidth) * 2 - 1,
         y: -(event.clientY / window.innerHeight) * 2 + 1,
@@ -34,7 +34,7 @@ const AnimationCanvas = ({ animationType, color }) => {
     };
 
     window.addEventListener("mousemove", onMouseMove);
-    mount.addEventListener("click", onClick);
+    mount.addEventListener("dblclick", onDblClick);
 
     const animate = function () {
       requestAnimationFrame(animate);
@@ -56,7 +56,7 @@ const AnimationCanvas = ({ animationType, color }) => {
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
-      mount.removeEventListener("click", onClick);
+      mount.removeEventListener("dblclick", onDblClick);
       mount.removeChild(renderer.domElement);
     };
   }, [animationType, color]);
