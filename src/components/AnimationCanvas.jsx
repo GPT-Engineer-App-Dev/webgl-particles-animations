@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 
 const AnimationCanvas = ({ animationType, color }) => {
   const mountRef = useRef(null);
+  const [fixedMouse, setFixedMouse] = useState(null);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -21,19 +22,34 @@ const AnimationCanvas = ({ animationType, color }) => {
 
     const mouse = new THREE.Vector2();
     const onMouseMove = (event) => {
-      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      if (!fixedMouse) {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      }
+    };
+
+    const onClick = (event) => {
+      setFixedMouse({
+        x: (event.clientX / window.innerWidth) * 2 - 1,
+        y: -(event.clientY / window.innerHeight) * 2 + 1,
+      });
     };
 
     window.addEventListener("mousemove", onMouseMove);
+    mount.addEventListener("click", onClick);
 
     const animate = function () {
       requestAnimationFrame(animate);
       points.rotation.x += 0.01;
       points.rotation.y += 0.01;
 
-      points.position.x = mouse.x * 5;
-      points.position.y = mouse.y * 5;
+      if (fixedMouse) {
+        points.position.x = fixedMouse.x * 5;
+        points.position.y = fixedMouse.y * 5;
+      } else {
+        points.position.x = mouse.x * 5;
+        points.position.y = mouse.y * 5;
+      }
 
       renderer.render(scene, camera);
     };
@@ -42,6 +58,7 @@ const AnimationCanvas = ({ animationType, color }) => {
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
+      mount.removeEventListener("click", onClick);
       mount.removeChild(renderer.domElement);
     };
   }, [animationType, color]);
