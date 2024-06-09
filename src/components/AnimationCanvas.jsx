@@ -22,10 +22,8 @@ const AnimationCanvas = ({ animationType, color }) => {
 
     const mouse = new THREE.Vector2();
     const onMouseMove = (event) => {
-      if (!fixedMouse) {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-      }
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
     const onClick = (event) => {
